@@ -1,6 +1,6 @@
-import { PATH_DB } from '../constants/contacts.js';
-import fs from 'fs/promises';
 import { createFakeContact } from '../utils/createFakeContact.js';
+import { readAllFromFile } from '../utils/readFromFile.js';
+import { updateContacts } from '../utils/updateContacts.js';
 
 const generateContacts = async (number) => {
   let existedContacts = [];
@@ -13,29 +13,7 @@ const generateContacts = async (number) => {
   }
   const updContacts = [...existedContacts, ...contactsjsonData];
 
-  addToFile(updContacts);
+  updateContacts(updContacts);
 };
 
-await generateContacts(15);
-
-async function addToFile(updContacts) {
-  try {
-    const jsonContacts = JSON.stringify(updContacts);
-    await fs.writeFile(PATH_DB, jsonContacts);
-    console.log('Succefully added!');
-  } catch (error) {
-    console.log('Error writing all contacts:', error.message);
-  }
-}
-
-async function readAllFromFile() {
-  try {
-    const data = await fs.readFile(PATH_DB);
-    return JSON.parse(data);
-  } catch (error) {
-    if (error.code !== 'ENOENT') {
-      console.error('Error reading existing contacts:', error.message);
-      return;
-    }
-  }
-}
+await generateContacts(5);

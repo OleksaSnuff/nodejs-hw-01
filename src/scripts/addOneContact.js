@@ -1,6 +1,7 @@
 import { PATH_DB } from '../constants/contacts.js';
 import fs from 'fs/promises';
 import { createFakeContact } from '../utils/createFakeContact.js';
+import { readAllFromFile } from '../utils/readFromFile.js';
 
 export const addOneContact = async () => {
   let existedContacts = await readAllFromFile();
@@ -8,22 +9,10 @@ export const addOneContact = async () => {
   const newContact = createFakeContact();
   const updContacts = [...existedContacts, newContact];
 
-  addToFile(updContacts);
+  await addToFile(updContacts);
 };
 
 await addOneContact();
-
-async function readAllFromFile() {
-  try {
-    const data = await fs.readFile(PATH_DB);
-    return JSON.parse(data);
-  } catch (error) {
-    if (error.code !== 'ENONET') {
-      console.error('Error reading existing contacts:', error.message);
-      return;
-    }
-  }
-}
 
 async function addToFile(updContacts) {
   try {

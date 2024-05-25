@@ -1,10 +1,8 @@
-import { PATH_DB } from '../constants/contacts.js';
-import fs from 'fs/promises';
+import { readAllFromFile } from '../utils/readFromFile.js';
 
 export const countContacts = async () => {
   try {
-    const data = await fs.readFile(PATH_DB);
-    const allConatcts = JSON.parse(data);
+    const allConatcts = await readAllFromFile();
     return allConatcts.length;
   } catch (error) {
     if (error.code !== 'ENONET') {

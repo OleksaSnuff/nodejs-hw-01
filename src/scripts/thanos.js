@@ -1,5 +1,5 @@
-import { PATH_DB } from '../constants/contacts.js';
-import fs from 'fs/promises';
+import { readAllFromFile } from '../utils/readFromFile.js';
+import { updateContacts } from '../utils/updateContacts.js';
 
 export const thanos = async () => {
   let allConatcts = await readAllFromFile();
@@ -15,25 +15,3 @@ export const thanos = async () => {
 };
 
 await thanos();
-
-async function readAllFromFile() {
-  try {
-    const data = await fs.readFile(PATH_DB);
-    return JSON.parse(data);
-  } catch (error) {
-    if (error.code !== 'ENONET') {
-      console.error('Error reading existing contacts:', error.message);
-      return;
-    }
-  }
-}
-
-async function updateContacts(updatedContacts) {
-  try {
-    const newContacts = JSON.stringify(updatedContacts);
-    await fs.writeFile(PATH_DB, newContacts);
-    console.log('Thanos work successfully!');
-  } catch (error) {
-    console.log('Error updating contacts:', error.message);
-  }
-}
